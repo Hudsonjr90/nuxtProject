@@ -1,7 +1,26 @@
 import { defineStore } from 'pinia'
 
+interface Article {
+  title: string
+  description: string
+  url: string
+  urlToImage: string
+  publishedAt: string
+  source: { name: string }
+  author: string
+}
+
+interface NewsState {
+  articles: Article[]
+  loading: boolean
+  error: string | null
+  lastUpdated: Date | null
+  autoRefresh: boolean
+  refreshInterval: NodeJS.Timeout | null
+}
+
 export const useNewsStore = defineStore('news', {
-  state: () => ({
+  state: (): NewsState => ({
     articles: [],
     loading: false,
     error: null,
@@ -25,7 +44,7 @@ export const useNewsStore = defineStore('news', {
         console.log('🔧 Carregando notícias de exemplo...')
         
         // Dados mock para demonstração
-        const mockData = [
+        const mockData: Article[] = [
           {
             title: "Nova tecnologia revoluciona o mercado brasileiro",
             description: "Empresas nacionais desenvolvem soluções inovadoras que prometem transformar diversos setores da economia.",
@@ -90,20 +109,20 @@ export const useNewsStore = defineStore('news', {
         
       } catch (err) {
         console.error('Erro ao buscar notícias:', err)
-        this.error = err.message || 'Erro ao carregar notícias'
+        this.error = (err as Error).message || 'Erro ao carregar notícias'
       } finally {
         this.loading = false
       }
     },
 
-    async searchNews(query) {
+    async searchNews(query: string) {
       this.loading = true
       this.error = null
 
       try {
         console.log(`🔍 Buscando por: "${query}"`)
         
-        const mockSearchResults = [
+        const mockSearchResults: Article[] = [
           {
             title: `Resultados da busca por: "${query}"`,
             description: "Esta é uma simulação de busca. Configure sua API key da NewsAPI para resultados reais.",
@@ -139,7 +158,7 @@ export const useNewsStore = defineStore('news', {
         
       } catch (err) {
         console.error('Erro na busca:', err)
-        this.error = err.message || 'Erro ao buscar notícias'
+        this.error = (err as Error).message || 'Erro ao buscar notícias'
       } finally {
         this.loading = false
       }

@@ -14,18 +14,18 @@
       <NewsControls />
 
       <!-- Mensagem de erro -->
-      <div v-if="newsStore.hasError" class="error">
+      <div v-if="newsStore?.hasError" class="error">
         ⚠️ {{ newsStore.error }}
       </div>
 
       <!-- Estado de carregamento -->
-      <div v-if="newsStore.isRefreshing && newsStore.articlesCount === 0" class="loading">
+      <div v-if="newsStore?.isRefreshing && newsStore.articlesCount === 0" class="loading">
         <div class="loading-spinner"></div>
         <p>Carregando notícias...</p>
       </div>
 
       <!-- Grid de notícias -->
-      <div v-else-if="newsStore.articlesCount > 0" class="news-grid">
+      <div v-else-if="newsStore?.articlesCount > 0" class="news-grid">
         <NewsCard 
           v-for="article in newsStore.articles" 
           :key="article.url"
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Estado vazio -->
-      <div v-else-if="!newsStore.isRefreshing" class="empty-state">
+      <div v-else-if="!newsStore?.isRefreshing" class="empty-state">
         <h3>📰 Nenhuma notícia encontrada</h3>
         <p>Tente buscar por outro termo ou categoria.</p>
       </div>
@@ -43,13 +43,15 @@
     <!-- Rodapé -->
     <footer class="footer">
       <div class="container">
-        <p>&copy; 2024 Notícias em Tempo Real - Desenvolvido com Nuxt.js</p>
+        <p>&copy; 2025 Notícias em Tempo Real</p>
       </div>
     </footer>
   </div>
 </template>
 
 <script setup>
+import { useNewsStore } from '../stores/news'
+
 const newsStore = useNewsStore()
 
 // Configurar meta tags
@@ -62,13 +64,17 @@ useHead({
 
 // Inicializar dados e atualização automática
 onMounted(async () => {
-  await newsStore.fetchNews()
-  newsStore.startAutoRefresh()
+  if (newsStore) {
+    await newsStore.fetchNews()
+    newsStore.startAutoRefresh()
+  }
 })
 
 // Limpar intervalos ao desmontar
 onUnmounted(() => {
-  newsStore.stopAutoRefresh()
+  if (newsStore) {
+    newsStore.stopAutoRefresh()
+  }
 })
 </script>
 
