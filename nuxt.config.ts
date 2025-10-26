@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts'
   ],
   
+  // Pinia configuration
+  pinia: {
+    storesDirs: ['./stores/**']
+  },
+  
   // Google Fonts
   googleFonts: {
     families: {
@@ -33,5 +38,10 @@ export default defineNuxtConfig({
         { name: 'description', content: 'Site de notícias em tempo real com atualizações automáticas' }
       ]
     }
+  },
+  
+  // Build optimization
+  build: {
+    transpile: ['pinia']
   }
 })
