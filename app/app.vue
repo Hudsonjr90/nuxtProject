@@ -9,7 +9,7 @@
     </header>
 
     <!-- Conteúdo principal -->
-    <main class="container">
+    <main class="container main-content">
       <!-- Controles -->
       <NewsControls />
 
@@ -41,16 +41,15 @@
     </main>
 
     <!-- Rodapé -->
-    <footer class="footer">
-      <div class="container">
-        <p>&copy; 2025 Notícias em Tempo Real</p>
-      </div>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script setup>
 import { useNewsStore } from '../stores/news'
+import NewsControls from '../components/NewsControls.vue'
+import NewsCard from '../components/NewsCard.vue'
+import Footer from '../components/Footer.vue'
 
 const newsStore = useNewsStore()
 
@@ -86,6 +85,10 @@ onUnmounted(() => {
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
@@ -93,11 +96,23 @@ body {
   background-color: #f8fafc;
 }
 
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Container principal */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Conteúdo principal */
+.main-content {
+  flex: 1;
+  padding-bottom: 2rem;
 }
 
 /* Cabeçalho */
@@ -232,19 +247,6 @@ body {
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: #374151;
-}
-
-/* Rodapé */
-.footer {
-  background: #374151;
-  color: white;
-  padding: 2rem 0;
-  margin-top: 4rem;
-  text-align: center;
-}
-
-.footer p {
-  opacity: 0.8;
 }
 
 /* Responsividade */
