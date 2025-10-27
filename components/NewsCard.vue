@@ -1,5 +1,5 @@
 <template>
-  <article class="news-card">
+  <article class="news-card" @click="goToDetails">
     <!-- Imagem da notícia -->
     <img 
       v-if="article.urlToImage" 
@@ -11,13 +11,7 @@
     <!-- Conteúdo -->
     <div class="news-content">
       <h2>
-        <a 
-          :href="article.url" 
-          target="_blank" 
-          rel="noopener noreferrer"
-        >
-          {{ article.title }}
-        </a>
+        {{ article.title }}
       </h2>
       
       <p v-if="article.description">
@@ -54,8 +48,16 @@ const props = defineProps({
   article: {
     type: Object,
     required: true
+  },
+  index: {
+    type: Number,
+    default: 0
   }
 })
+
+const emit = defineEmits(['click'])
+
+const router = useRouter()
 
 const handleImageError = (event) => {
   const img = event.target
@@ -74,9 +76,33 @@ const formatDate = (date) => {
 const isRecent = (date) => {
   return dayjs().diff(dayjs(date), 'hour') < 2
 }
+
+const goToDetails = () => {
+  // Criar um ID único baseado na URL ou índice
+  const articleId = btoa(props.article.url).replace(/[^a-zA-Z0-9]/g, '').slice(0, 20) || `article-${props.index}`
+  
+  router.push({
+    name: 'details-id',
+    params: { id: articleId },
+    query: { 
+      url: props.article.url,
+      title: props.article.title 
+    }
+  })
+}
 </script>
 
 <style scoped>
+.news-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
 .recent-badge {
   display: inline-block;
   background: linear-gradient(45deg, #ff6b6b, #ee5a24);
@@ -95,14 +121,15 @@ const isRecent = (date) => {
   100% { transform: scale(1); }
 }
 
-.news-content h2 a {
+.news-content h2 {
   background: linear-gradient(120deg, #667eea, #764ba2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  transition: all 0.3s ease;
 }
 
-.news-content h2 a:hover {
+.news-card:hover .news-content h2 {
   background: linear-gradient(120deg, #5a67d8, #6b46c1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

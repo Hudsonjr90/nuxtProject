@@ -1,10 +1,17 @@
 <template>
   <footer class="footer">
     <div class="container">
-      <p>&copy; 2025 Notícias em Tempo Real - Desenvolvido com Nuxt.js</p>
+      <p>&copy; {{ currentYear }} Notícias em Tempo Real</p>
     </div>
   </footer>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+
+const currentYear = ref(new Date().getFullYear())
+</script>
+
 
 <style scoped>
 .footer {
