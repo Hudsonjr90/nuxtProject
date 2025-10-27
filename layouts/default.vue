@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <button class="theme-toggle" @click="themeStore.toggleTheme()" :aria-label="themeStore.theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'">
+      <span v-if="themeStore.theme === 'dark'">🌙</span>
+      <span v-else>☀️</span>
+    </button>
     <NuxtPage />
-    
     <!-- Rodapé -->
     <Footer />
   </div>
@@ -9,6 +12,13 @@
 
 <script setup>
 import Footer from '../components/Footer.vue'
+import { useThemeStore } from '../stores/theme'
+import { onMounted } from 'vue'
+
+const themeStore = useThemeStore()
+onMounted(() => {
+  themeStore.initTheme()
+})
 </script>
 
 <style>
@@ -23,11 +33,52 @@ html, body {
   height: 100%;
 }
 
+html.dark {
+  --bg: #181a1b;
+  --text: #e5e7eb;
+  --card: #23272a;
+  --border: #374151;
+  --primary: #667eea;
+  --secondary: #764ba2;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.dark, #app.dark {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Botão de alternância de tema */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  background: var(--card, #fff);
+  color: var(--text, #333);
+  border: 2px solid var(--border, #e5e7eb);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+.theme-toggle:hover {
+  background: var(--primary, #667eea);
+  color: #fff;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f8fafc;
+  color: var(--text, #333);
+  background-color: var(--bg, #f8fafc);
 }
 
 #app {
@@ -81,12 +132,12 @@ body {
 
 /* Card de notícia */
 .news-card {
-  background: white;
+  background: var(--card, #fff);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid var(--primary, #667eea);
 }
 
 .news-card img {
@@ -154,12 +205,19 @@ body {
   margin: 2rem 0;
   text-align: center;
 }
+html.dark .error {
+  background: #2d1e1e;
+  color: #f87171;
+}
 
 /* Estados vazios */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
   color: #6b7280;
+}
+html.dark .empty-state {
+  color: #a1a1aa;
 }
 
 .empty-state h3 {
